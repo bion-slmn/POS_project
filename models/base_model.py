@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''This module defines a base model class '''
 import uuid
+import datetime
 
 
 class BaseModel:
