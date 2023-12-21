@@ -2,11 +2,19 @@
 '''This module defines a base model class '''
 import uuid
 import datetime
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine, DateTime, Column, Integer, String
+
+Base = declarative_base()
 
 
 class BaseModel:
     ''' this model is the parent of all other classes
      its in herited by all models'''
+    id = Column(String(60), primary_key=True)
+    created_at = Column(DateTime, nullable=False)
+    updated_at = Column(DateTime, nullable=False)
+    name = Column(String(60), unique=True, nullabe=False)
 
     def __init__(self, **kwargs):
         '''this method intialises the parameters '''
