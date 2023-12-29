@@ -5,6 +5,7 @@ import datetime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine, DateTime, Column, Integer, String
 
+print('creating Base')
 Base = declarative_base()
 
 
@@ -14,7 +15,7 @@ class BaseModel:
     id = Column(String(60), primary_key=True)
     created_at = Column(DateTime, nullable=False)
     updated_at = Column(DateTime, nullable=False)
-    name = Column(String(60), unique=True, nullabe=False)
+    name = Column(String(60))
 
     def __init__(self, **kwargs):
         '''this method intialises the parameters '''
@@ -37,10 +38,12 @@ class BaseModel:
         return new_dict
 
     def save(self):
-        '''saving an item to the database'''
+        '''saving an item to the databasei'''
+        from models import storage
         storage.new(self)
         storage.save()
 
     def delete(self):
         '''deletes an object from the storage'''
+        from models import storage
         storage.delete(self)

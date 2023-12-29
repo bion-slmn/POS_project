@@ -3,7 +3,9 @@
 from os import getenv
 from sqlalchemy.orm import scoped_session
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine, URL
+from sqlalchemy import create_engine, URL, MetaData
+from models.base_model import Base
+from dotenv import load_dotenv
 
 
 class Db_storage:
@@ -13,13 +15,15 @@ class Db_storage:
 
     def __init__(self):
         '''constructs the engine for MYSQL'''
+        load_dotenv()
         url_obj = URL.create(
                 'mysql+mysqldb',
-                username = getenv('POS_USER'),
-                password = getenv('POS_PWD'),
-                database = getenv('POS_DB'),
-                host = 'localhost')
-        self.__engine = create_engine(url_object, pool_recycle=3600)
+                username=getenv('POS_USER'),
+                password=getenv('POS_PWD'),
+                database=getenv('POS_DB'),
+                host='localhost')
+        print(url_obj)
+        self.__engine = create_engine(url_obj, pool_recycle=3600)
 
     def new(self, obj):
         '''this method add and object to the database
@@ -39,11 +43,17 @@ class Db_storage:
 
     def load(self):
         '''this method creates all tables, start a session'''
-        Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine,
-                                        expire_on_commit=False)
-        Session = scoped_session(session_factory)
-        self.__session = Session()
+        try:
+            Base.metadata.create_all(self.__engine)
+            session_factory = sessionmaker(
+                    bind=self.__engine,
+                    expire_on_commit=False
+                    )
+            Session = scoped_session(session_factory)
+            self.__session = Session()
+
+        except Exception as e:
+            print("Error creating tables:", e)
 
     def close(self):
         '''close a session '''
