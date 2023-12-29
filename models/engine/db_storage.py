@@ -21,8 +21,9 @@ class Db_storage:
                 username=getenv('POS_USER'),
                 password=getenv('POS_PWD'),
                 database=getenv('POS_DB'),
-                host='localhost')
-        print(url_obj)
+                host='localhost'
+                )
+
         self.__engine = create_engine(url_obj, pool_recycle=3600)
 
     def new(self, obj):
